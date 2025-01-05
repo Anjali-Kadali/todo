@@ -1,6 +1,6 @@
 const{request,response}=require('express')
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const bodyParser=require('body-parser')
 app.use(bodyParser.json());
 const{Todo}=require("./models")
@@ -54,3 +54,5 @@ app.delete('/todos/:id', function (request, response) {
 app.listen(3000,()=>{
   console.log("Server is running on port 3000")
 })
+
+module.exports=app;
