@@ -50,9 +50,4 @@ app.delete('/todos/:id', function (request, response) {
   console.log("Delete a todo by ID:",request.params.id)
 })
 
-
-app.listen(3000,()=>{
-  console.log("Server is running on port 3000")
-})
-
 module.exports=app;
