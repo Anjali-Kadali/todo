@@ -16,6 +16,16 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+// Add a check to authenticate the database connection
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected successfully.');
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
+  });
+
+// Read all model files except index.js and load them into the `db` object
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -31,11 +41,21 @@ fs
     db[model.name] = model;
   });
 
+// Set associations for each model, if defined
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
+
+// Sync the models with the database
+sequelize.sync({ force: false })  // Use force: true in development to recreate tables if necessary
+  .then(() => {
+    console.log("Database synced successfully.");
+  })
+  .catch((error) => {
+    console.error("Database sync failed:", error);
+  });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

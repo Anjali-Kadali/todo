@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -12,22 +11,45 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static getTodos(){
+
+    // Static method to get all Todos
+    static getTodos() {
       return this.findAll();
     }
-    static addTodo({title,dueDate}){
-      return this.create({title:title,dueDate:dueDate,completed:false})
+
+    // Static method to add a new Todo
+    static addTodo({ title, dueDate }) {
+      return this.create({ title, dueDate, completed: false });
     }
-    markAsCompleted(){
-      return this.update({completed:true})
-    }  }
-  Todo.init({
-    title: DataTypes.STRING,
-    dueDate: DataTypes.DATEONLY,
-    completed: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'Todo',
-  });
+
+    // Instance method to mark Todo as completed
+    markAsCompleted() {
+      return this.update({ completed: true }, { where: { id: this.id } });
+    }
+  }
+
+  // Initialize Todo model
+  Todo.init(
+    {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false, // Ensure the title cannot be null
+      },
+      dueDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: true, // It's optional
+      },
+      completed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, // Default value for completed is false
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Todo',
+      tableName: 'Todos', // Explicitly specify the table name here
+    }
+  );
+
   return Todo;
 };
